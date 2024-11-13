@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Match, Team } from '../types';
-import { Trophy, Star } from 'lucide-react';
+import { Trophy, Star, ArrowUp } from 'lucide-react';
 
 interface MatchCardProps {
   match: Match;
@@ -52,14 +52,24 @@ function MatchCard({ match, onSubmitScores }: MatchCardProps) {
             key={team?.id || index}
             className={`p-3 ${index === 0 ? 'mb-2' : ''} rounded-lg border
               ${match.isCompleted 
-                ? 'bg-gray-50 border-gray-200' 
+                ? match.winner === team?.id
+                  ? 'bg-green-50 border-green-200'
+                  : 'bg-gray-50 border-gray-200'
                 : 'bg-white border-gray-200'}`}
           >
             <div className="flex justify-between items-center gap-4">
               <div className="flex-1">
                 {team ? (
                   <>
-                    <div className="font-medium text-gray-800">{team.name}</div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-gray-800">{team.name}</span>
+                      {match.isCompleted && match.winner === team.id && (
+                        <span className="flex items-center gap-1 text-xs text-green-600">
+                          <ArrowUp className="w-3 h-3" />
+                          +{match.pointDifference} pts
+                        </span>
+                      )}
+                    </div>
                     <div className="text-sm text-gray-500 mt-1">
                       {team.members.join(', ')}
                     </div>

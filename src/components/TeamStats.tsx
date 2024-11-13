@@ -1,13 +1,18 @@
 import React from 'react';
 import { Team } from '../types';
-import { Trophy, Target, Award } from 'lucide-react';
+import { Trophy, Target, Award, TrendingUp } from 'lucide-react';
 
 interface TeamStatsProps {
   teams: Team[];
 }
 
 function TeamStats({ teams }: TeamStatsProps) {
-  const sortedTeams = [...teams].sort((a, b) => b.points - a.points);
+  // Sort teams by wins first, then by lead points
+  const sortedTeams = [...teams].sort((a, b) => {
+    if (b.wins !== a.wins) return b.wins - a.wins;
+    if (b.leadPoints !== a.leadPoints) return b.leadPoints - a.leadPoints;
+    return b.points - a.points;
+  });
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
@@ -33,11 +38,17 @@ function TeamStats({ teams }: TeamStatsProps) {
                 <div className="flex items-center gap-1">
                   <Target className="w-4 h-4 text-gray-500" />
                   <span className="text-sm font-medium text-gray-600">
-                    {team.points} pts
+                    {team.wins} wins
+                  </span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <TrendingUp className="w-4 h-4 text-indigo-500" />
+                  <span className="text-sm font-medium text-indigo-600">
+                    +{team.leadPoints}
                   </span>
                 </div>
                 <div className="text-sm text-gray-500">
-                  {team.wins} wins
+                  {team.points} pts
                 </div>
               </div>
             </div>
