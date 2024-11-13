@@ -4,7 +4,6 @@ export function generateRoundRobinMatches(teams: Team[]): Match[] {
   const matches: Match[] = [];
   let matchCounter = 1;
 
-  // Generate matches where each team plays against every other team once
   for (let i = 0; i < teams.length; i++) {
     for (let j = i + 1; j < teams.length; j++) {
       matches.push({
@@ -24,7 +23,7 @@ export function generateRoundRobinMatches(teams: Team[]): Match[] {
 export function calculateTeamStats(matches: Match[]): Team[] {
   const teamStats = new Map<string, Team>();
 
-  // Get all unique teams from matches
+  // Initialize team stats
   matches.forEach(match => {
     match.teams.forEach(team => {
       if (team && !teamStats.has(team.id)) {
@@ -32,7 +31,8 @@ export function calculateTeamStats(matches: Match[]): Team[] {
           ...team,
           points: 0,
           wins: 0,
-          matchesPlayed: 0
+          matchesPlayed: 0,
+          leadPoints: 0
         });
       }
     });
@@ -53,10 +53,18 @@ export function calculateTeamStats(matches: Match[]): Team[] {
       statsA.points += scoreA;
       statsB.points += scoreB;
 
+      // Calculate point difference and update wins/leadPoints
+      const pointDifference = Math.abs(scoreA - scoreB);
       if (scoreA > scoreB) {
         statsA.wins++;
+        statsA.leadPoints += pointDifference;
+        match.pointDifference = pointDifference;
+        match.winner = teamA.id;
       } else if (scoreB > scoreA) {
         statsB.wins++;
+        statsB.leadPoints += pointDifference;
+        match.pointDifference = pointDifference;
+        match.winner = teamB.id;
       }
 
       teamStats.set(teamA.id, statsA);
@@ -69,15 +77,19 @@ export function calculateTeamStats(matches: Match[]): Team[] {
 
 export function getTopTeams(teams: Team[], count: number = 2): Team[] {
   return [...teams].sort((a, b) => {
-    // Sort by points first
-    if (b.points !== a.points) {
-      return b.points - a.points;
-    }
-    // If points are equal, sort by wins
+    // Sort primarily by wins
     if (b.wins !== a.wins) {
       return b.wins - a.wins;
     }
-    // If wins are equal, sort by matches played (fewer is better)
+    // If wins are equal, sort by lead points
+    if (b.leadPoints !== a.leadPoints) {
+      return b.leadPoints - a.leadPoints;
+    }
+    // If lead points are equal, sort by total points
+    if (b.points !== a.points) {
+      return b.points - a.points;
+    }
+    // If everything is equal, sort by matches played (fewer is better)
     return a.matchesPlayed - b.matchesPlayed;
   }).slice(0, count);
 }
