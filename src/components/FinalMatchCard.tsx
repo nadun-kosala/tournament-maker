@@ -1,9 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import trophy from '../assets/trophy.gif'
+import generatePDF, { Options } from "react-to-pdf";
+import { PDF } from "./PDF";
 
-const FinalMatchCard = ({ finalMatch, finalTeam }: any) => {
+
+const FinalMatchCard = ({ finalMatch, finalTeam, matches, teams }: any) => {
+    const formatDate = (date: Date) => {
+        return new Date(date).toLocaleDateString().replace(/\//g, '_');
+      };
+
+    const options: Options = {
+        filename: `Tournament_Summary_${formatDate(new Date())}.pdf`,
+        page: {
+          margin: 20
+        }
+      };
+      
     const [showCongrats, setShowCongrats] = useState(true);
+    const getTargetElement = () => document.getElementById("container");
+
+    const downloadPdf = () => generatePDF(getTargetElement, options);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -49,21 +66,22 @@ const FinalMatchCard = ({ finalMatch, finalTeam }: any) => {
                             Champion!
                         </h2>
                     </div>
-                    <p className="text-lg font-semibold">
+                    <p className="text-lg font-semibold mb-5">
                         Winner: <span className="underline">{finalTeam.name}</span>
                     </p>
-                    <p className="text-sm mt-2">
-                        <span className="font-medium">Team Members:</span>
-                    </p>
-                    <ul className="mt-3 space-y-1 text-sm">
-                    {finalTeam.members.map((member: any, index: any) => (
-                                    <li key={index}
-                                        className="bg-white text-green-700 px-4 py-2 mx-2 rounded-full shadow-sm inline-block font-medium">
-                                        {member}
-                                    </li>
-                                    ))}
-                    </ul>
-                        <button className="mt-2">Download Tournament Summary</button>
+
+                    <button
+                        onClick={downloadPdf}
+                        className="px-6 py-2 mt-6 mb-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                    >
+                    Download Tournament Summary
+                    </button>
+                    <div id="container" className="w-full">
+                        <div>
+                        <PDF finalMatch={finalMatch} finalTeam={finalTeam} matches={matches} teams={teams} />
+                        </div>
+                    </div>
+
                 </div>
             )}
         </div>
