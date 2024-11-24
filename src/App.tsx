@@ -79,9 +79,10 @@ const [teams, setTeams] = useState<Team[]>([]);
                             <p className="text-gray-600">Create teams, play matches, and find the champion!</p>
                         </header>
                         {finalMatch && finalTeam ?
-                        <FinalMatchCard finalMatch={finalMatch} finalTeam={finalTeam} /> : null
+                        <FinalMatchCard finalMatch={finalMatch} finalTeam={finalTeam} matches={matches} teams={teams} /> : null
                         }
 
+                        <div className={ finalTeam ? 'hidden' : 'block'}>
                         <div className="grid lg:grid-cols-[350px,1fr] gap-8">
                             <div className="space-y-6">
                                 <div className="bg-white rounded-xl shadow-lg p-6">
@@ -135,6 +136,7 @@ const [teams, setTeams] = useState<Team[]>([]);
                                 <Bracket matches={matches} finalMatch={finalMatch}
                                     onSubmitScores={handleSubmitScores} />
                             </div>
+                        </div>
                         </div>
                         <footer className="gap-2 p-4 mt-10 opacity-50">
                             <div className="flex items-center justify-center">
