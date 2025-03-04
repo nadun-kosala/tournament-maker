@@ -7,7 +7,6 @@ interface TeamStatsProps {
 }
 
 function TeamStats({ teams }: TeamStatsProps) {
-  // Sort teams by wins first, then by lead points
   const sortedTeams = [...teams].sort((a, b) => {
     if (b.wins !== a.wins) return b.wins - a.wins;
     if (b.leadPoints !== a.leadPoints) return b.leadPoints - a.leadPoints;
