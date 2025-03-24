@@ -9,15 +9,19 @@ interface BracketProps {
 }
 
 function Bracket({ matches, finalMatch, onSubmitScores }: BracketProps) {
-  const regularMatches = matches.filter(m => m.round === 'regular');
+  const regularMatches = matches
+    .filter(m => m.round === 'regular')
+    .sort((a, b) => a.matchNumber - b.matchNumber);
   
   return (
     <div className="space-y-8">
       {finalMatch && (
         <div className="flex flex-col items-center gap-4">
+          <h2 className="text-xl font-semibold mb-4">Final Match</h2>
           <MatchCard 
             match={finalMatch}
             onSubmitScores={onSubmitScores}
+            tournamentStatus={finalMatch.tournamentStatus}
           />
         </div>
       )}
@@ -31,6 +35,7 @@ function Bracket({ matches, finalMatch, onSubmitScores }: BracketProps) {
                 key={match.id}
                 match={match}
                 onSubmitScores={onSubmitScores}
+                tournamentStatus={match.tournamentStatus}
               />
             ))}
           </div>

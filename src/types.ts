@@ -5,7 +5,7 @@ export interface Team {
   points: number;
   wins: number;
   matchesPlayed: number;
-  leadPoints: number; // Added for storing point differences
+  leadPoints: number;
 }
 
 export interface Match {
@@ -15,6 +15,13 @@ export interface Match {
   isCompleted: boolean;
   round: 'regular' | 'final';
   matchNumber: number;
-  pointDifference?: number; // Added to store the point difference
-  winner?: string; // Added to store winner's ID
+  pointDifference?: number;
+  winner?: string;
+  tournamentStatus?: string;
+}
+
+export interface UserProfile {
+  id: string;
+  full_name: string;
+  created_at: string;
 }
