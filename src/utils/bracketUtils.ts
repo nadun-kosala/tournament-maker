@@ -4,16 +4,53 @@ export function generateRoundRobinMatches(teams: Team[]): Match[] {
   const matches: Match[] = [];
   let matchCounter = 1;
 
-  for (let i = 0; i < teams.length; i++) {
-    for (let j = i + 1; j < teams.length; j++) {
+  // Match generation for team sizes 5 and 6
+  if (teams.length === 5) {
+    const staticOrder = [
+      [0, 1], [2, 3], [0, 4], [1, 3], [4, 2],
+      [0, 3], [1, 4], [2, 0], [3, 4], [1, 2]
+    ];
+
+    staticOrder.forEach(([teamAIndex, teamBIndex]) => {
       matches.push({
         id: crypto.randomUUID(),
-        teams: [teams[i], teams[j]],
+        teams: [teams[teamAIndex], teams[teamBIndex]],
         scores: [null, null],
         isCompleted: false,
         round: 'regular',
         matchNumber: matchCounter++
       });
+    });
+  } else if (teams.length === 6) {
+    const staticOrder = [
+      [0, 5], [1, 2], [3, 4], [0, 2], [1, 5],
+      [3, 0], [2, 4], [1, 3], [5, 4], [0, 1],
+      [2, 5], [4, 1], [3, 2], [0, 4], [5, 3]
+    ];
+
+    staticOrder.forEach(([teamAIndex, teamBIndex]) => {
+      matches.push({
+        id: crypto.randomUUID(),
+        teams: [teams[teamAIndex], teams[teamBIndex]],
+        scores: [null, null],
+        isCompleted: false,
+        round: 'regular',
+        matchNumber: matchCounter++
+      });
+    });
+  } else {
+    // Default round-robin logic for other team sizes
+    for (let i = 0; i < teams.length; i++) {
+      for (let j = i + 1; j < teams.length; j++) {
+        matches.push({
+          id: crypto.randomUUID(),
+          teams: [teams[i], teams[j]],
+          scores: [null, null],
+          isCompleted: false,
+          round: 'regular',
+          matchNumber: matchCounter++
+        });
+      }
     }
   }
 
